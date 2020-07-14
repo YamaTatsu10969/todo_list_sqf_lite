@@ -19,4 +19,14 @@ class Task {
     map['status'] = status;
     return map;
   }
+
+  factory Task.fromMap(Map<String, dynamic> map) {
+    return Task.withId(
+      id: map['id'],
+      title: map['title'],
+      date: DateTime.parse(map['date']),
+      priority: map['priority'],
+      status: map['status'],
+    );
+  }
 }
