@@ -54,7 +54,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       _formKey.currentState.save();
       print('$_title, $_date, $_priority');
 
-      // TODO: Insert the task to our user's database
+      // Insert the task to our user's database
       Task task = Task(title: _title, date: _date, priority: _priority);
       if (widget.task == null) {
         task.status = 0;
@@ -65,7 +65,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
         DatabaseHelper.instance.updateTask(task);
       }
 
-      // TODO: Update the task
+      // Update the task
       widget.updateTaskList();
       Navigator.pop(context);
     }
