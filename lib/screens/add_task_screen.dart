@@ -85,7 +85,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
           onTap: () => FocusScope.of(context).unfocus(),
           child: SingleChildScrollView(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 80),
+              padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 40),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
