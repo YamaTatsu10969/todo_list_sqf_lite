@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:todolistsqflite/models/task.dart';
 
 class DatabaseHelper {
-  static final DatabaseHelper instance = DatabaseHelper._instance();
+  static final instance = DatabaseHelper._instance();
   static Database _db;
 
   DatabaseHelper._instance();
@@ -34,7 +34,12 @@ class DatabaseHelper {
 
   void _createDb(Database db, int version) async {
     await db.execute(
-      'CREATE TABLE $tasksTable($colId INTEGER PRIMARY KEY AUTOINCREMENT, $colTitle TEXT, $colDate TEXT, $colPriority TEXT, $colStatus INTEGER)',
+      'CREATE TABLE $tasksTable('
+      '$colId INTEGER PRIMARY KEY AUTOINCREMENT, '
+      '$colTitle TEXT, '
+      '$colDate TEXT, '
+      '$colPriority TEXT, '
+      '$colStatus INTEGER)',
     );
   }
 

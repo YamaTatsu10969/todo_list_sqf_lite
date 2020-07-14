@@ -1,7 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:todolistsqflite/helpers/database_helper.dart';
+import 'package:todolistsqflite/models/task.dart';
 
 class AddTaskScreen extends StatefulWidget {
+  final Task task;
+  final Function updateTaskList;
+
+  AddTaskScreen({Key key, this.task, this.updateTaskList});
+
   @override
   _AddTaskScreenState createState() => _AddTaskScreenState();
 }
@@ -13,12 +20,17 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
   DateTime _date = DateTime.now();
   TextEditingController _dateController = TextEditingController();
 
-  final DateFormat _dateFormatter = DateFormat('yyyy年 MM月 dd日');
-  final _priorities = <String>['低', '中', '高'];
+  final DateFormat _dateFormatter = DateFormat('yyyy / MM / dd');
+  final _priorities = <String>['Low', 'Mudium', 'High'];
 
   @override
   void initState() {
     super.initState();
+    if (widget.task != null) {
+      _title = widget.task.title;
+      _date = widget.task.date;
+      _priority = widget.task.priority;
+    }
     _dateController.text = _dateFormatter.format(_date);
   }
 
@@ -43,10 +55,26 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
       print('$_title, $_date, $_priority');
 
       // TODO: Insert the task to our user's database
+      Task task = Task(title: _title, date: _date, priority: _priority);
+      if (widget.task == null) {
+        task.status = 0;
+        DatabaseHelper.instance.insertTask(task);
+      } else {
+        task.id = widget.task.id;
+        task.status = widget.task.status;
+        DatabaseHelper.instance.updateTask(task);
+      }
 
       // TODO: Update the task
+      widget.updateTaskList();
       Navigator.pop(context);
     }
+  }
+
+  _delete() {
+    DatabaseHelper.instance.deleteTask(widget.task.id);
+    widget.updateTaskList();
+    Navigator.pop(context);
   }
 
   @override
@@ -71,7 +99,7 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                   ),
                   SizedBox(height: 20),
                   Text(
-                    'Add Task',
+                    widget.task == null ? 'Add Task' : 'Update Task',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 40,
@@ -168,13 +196,32 @@ class _AddTaskScreenState extends State<AddTaskScreen> {
                           ),
                           child: FlatButton(
                             child: Text(
-                              'Add',
+                              widget.task == null ? 'Add' : 'Update',
                               style:
                                   TextStyle(color: Colors.white, fontSize: 20),
                             ),
                             onPressed: _submit,
                           ),
-                        )
+                        ),
+                        widget.task == null
+                            ? SizedBox.shrink()
+                            : Container(
+                                margin: EdgeInsets.symmetric(vertical: 20),
+                                height: 60,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Colors.red,
+                                  borderRadius: BorderRadius.circular(30),
+                                ),
+                                child: FlatButton(
+                                  child: Text(
+                                    'Delete',
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                  onPressed: _delete,
+                                ),
+                              ),
                       ],
                     ),
                   ),

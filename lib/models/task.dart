@@ -14,7 +14,7 @@ class Task {
       map['id'] = id;
     }
     map['title'] = title;
-    map['date'] = date;
+    map['date'] = date.toIso8601String();
     map['priority'] = priority;
     map['status'] = status;
     return map;
